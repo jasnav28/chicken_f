@@ -1,6 +1,6 @@
 {
-  "name": "ChickenLink - Poultry Distributor Platform",
-  "short_name": "ChickenLink",
+  "name": "Chicken Farms - Poultry Distributor Platform",
+  "short_name": "Chicken Farms",
   "description": "Daily Order & Delivery Platform for Chicken Retailers and Distributors",
   "start_url": "/",
   "display": "standalone",

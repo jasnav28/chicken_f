@@ -1,7 +1,7 @@
 import { Shop, Product, Order, Payment, LedgerEntry, StandingOrder, AppSettings, NotificationItem } from '../types';
 
 export const INITIAL_SETTINGS: AppSettings = {
-  business_name: 'Sri Lakshmi Broiler & Poultry Distributors',
+  business_name: 'Chicken Farms Distributors',
   owner_name: 'M. Venkatesh',
   phone: '+91 98450 99881',
   address: 'No. 42, Wholesale Poultry Market, City Market, Bangalore - 560002',
@@ -9,9 +9,9 @@ export const INITIAL_SETTINGS: AppSettings = {
   fssai: '11223344556677',
   cutoff_time: '21:00', // 9:00 PM
   delivery_slots: ['Morning', 'Afternoon', 'Evening'],
-  invoice_prefix: 'INV-CKL-',
+  invoice_prefix: 'INV-CF-',
   invoice_footer: 'Fresh farm chicken delivered daily. Please inspect goods at time of delivery. Goods once accepted cannot be returned.',
-  upi_id: 'lakshmipoultry@okhdfcbank',
+  upi_id: 'chickenfarms@okhdfcbank',
   bank_details: {
     bank_name: 'HDFC Bank',
     account_number: '50200084729184',

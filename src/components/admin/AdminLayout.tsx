@@ -83,7 +83,7 @@ export const AdminLayout: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => handleNavigate('dashboard')}>
             <div className="w-9 h-9 rounded-lg bg-brand flex items-center justify-center text-white font-extrabold text-base shadow-sm">
-              CL
+              CF
             </div>
             <div>
               <span className="font-bold text-sm text-textPrimary leading-none block">

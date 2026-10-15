@@ -98,14 +98,14 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#1A060E]">
+    <div className="min-h-screen w-full flex flex-col md:flex-row bg-[#062413]">
       {/* ============================================================== */}
-      {/* LEFT BRANDING PANEL (RestoPilot with Poultry Farm Image)       */}
+      {/* LEFT BRANDING PANEL (Chicken Farms with Poultry Farm Image)    */}
       {/* ============================================================== */}
       <div
-        className="w-full md:w-1/2 p-8 sm:p-12 lg:p-16 flex flex-col justify-between text-white relative overflow-hidden min-h-[500px] md:min-h-screen border-b md:border-b-0 md:border-r border-[#360F1D]"
+        className="w-full md:w-1/2 p-8 sm:p-12 lg:p-16 flex flex-col justify-between text-white relative overflow-hidden min-h-[500px] md:min-h-screen border-b md:border-b-0 md:border-r border-[#14532D]"
         style={{
-          backgroundImage: `linear-gradient(135deg, rgba(32, 7, 16, 0.92) 0%, rgba(48, 10, 24, 0.88) 100%), url('/poultry-farm-bg.jpg')`,
+          backgroundImage: `linear-gradient(135deg, rgba(20, 83, 45, 0.92) 0%, rgba(22, 101, 52, 0.86) 50%, rgba(5, 46, 22, 0.94) 100%), url('/poultry-farm-bg.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -115,22 +115,22 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
         <div
           className="absolute inset-0 opacity-15 pointer-events-none"
           style={{
-            backgroundImage: `radial-gradient(#F97316 1px, transparent 1px)`,
+            backgroundImage: `radial-gradient(#86EFAC 1px, transparent 1px)`,
             backgroundSize: `36px 36px`,
           }}
         />
 
-        {/* Top: RestoPilot Brand by BluNet */}
+        {/* Top: Chicken Farms Brand by BluNet */}
         <div className="relative z-10">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-xl bg-[#F97316] flex items-center justify-center text-white shadow-lg shadow-orange-950/40">
+            <div className="w-11 h-11 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-950/40">
               <UtensilsCrossed className="w-6 h-6 stroke-[2.2]" />
             </div>
             <div>
               <div className="text-2xl font-extrabold tracking-tight text-white leading-none">
-                RestoPilot
+                Chicken Farms
               </div>
-              <div className="text-xs text-orange-200/90 font-medium tracking-wide mt-1">
+              <div className="text-xs text-emerald-200/90 font-medium tracking-wide mt-1">
                 By BluNet IT Services
               </div>
             </div>
@@ -140,66 +140,66 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
         {/* Center: Main Headline, Subtitle & 4 Feature Badges */}
         <div className="relative z-10 my-auto py-8 max-w-lg">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-            Manage your restaurant, simplify your{' '}
-            <span className="text-[#F97316]">success.</span>
+            Manage your poultry supply, simplify your{' '}
+            <span className="text-[#86EFAC]">success.</span>
           </h1>
 
-          <p className="text-sm sm:text-base text-slate-200/90 mt-4 leading-relaxed font-normal">
-            Chicken distribution service by BluNet IT Services helps you handle daily fresh poultry
-            orders, smart scale weight billing, live market rates, and purchases — all in one
-            powerful platform.
+          <p className="text-sm sm:text-base text-emerald-100/90 mt-4 leading-relaxed font-normal">
+            Chicken Farms poultry distribution platform by BluNet IT Services helps you handle daily fresh poultry
+            orders, smart scale weight billing, live market rates, and digital ledger tracking — all in one
+            convenient platform.
           </p>
 
           {/* 4 Feature Cards (2x2 Grid) */}
           <div className="grid grid-cols-2 gap-4 mt-8">
-            {/* 1. Sales Dashboard */}
-            <div className="flex items-start gap-3 bg-[#260A15]/60 backdrop-blur-sm p-2.5 rounded-xl border border-white/5">
-              <div className="w-9 h-9 rounded-lg bg-[#33101E] border border-[#F97316]/40 flex items-center justify-center text-[#F97316] shrink-0 mt-0.5">
+            {/* 1. Live Daily Rates */}
+            <div className="flex items-start gap-3 bg-[#062E17]/60 backdrop-blur-sm p-2.5 rounded-xl border border-emerald-500/20">
+              <div className="w-9 h-9 rounded-lg bg-[#0D4422] border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0 mt-0.5">
                 <BarChart3 className="w-4 h-4 stroke-[2]" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-white">Sales Dashboard</h4>
-                <p className="text-[11px] text-slate-300 mt-0.5 leading-snug">
-                  Track restaurant performance.
+                <h4 className="text-xs sm:text-sm font-bold text-white">Live Daily Rates</h4>
+                <p className="text-[11px] text-emerald-200/90 mt-0.5 leading-snug">
+                  Get today's published rates.
                 </p>
               </div>
             </div>
 
             {/* 2. Smart Billing */}
-            <div className="flex items-start gap-3 bg-[#260A15]/60 backdrop-blur-sm p-2.5 rounded-xl border border-white/5">
-              <div className="w-9 h-9 rounded-lg bg-[#33101E] border border-[#F97316]/40 flex items-center justify-center text-[#F97316] shrink-0 mt-0.5">
+            <div className="flex items-start gap-3 bg-[#062E17]/60 backdrop-blur-sm p-2.5 rounded-xl border border-emerald-500/20">
+              <div className="w-9 h-9 rounded-lg bg-[#0D4422] border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0 mt-0.5">
                 <Receipt className="w-4 h-4 stroke-[2]" />
               </div>
               <div>
                 <h4 className="text-xs sm:text-sm font-bold text-white">Smart Billing</h4>
-                <p className="text-[11px] text-slate-300 mt-0.5 leading-snug">
-                  Create bills quickly.
+                <p className="text-[11px] text-emerald-200/90 mt-0.5 leading-snug">
+                  Accurate delivered weights.
                 </p>
               </div>
             </div>
 
-            {/* 3. Inventory */}
-            <div className="flex items-start gap-3 bg-[#260A15]/60 backdrop-blur-sm p-2.5 rounded-xl border border-white/5">
-              <div className="w-9 h-9 rounded-lg bg-[#33101E] border border-[#F97316]/40 flex items-center justify-center text-[#F97316] shrink-0 mt-0.5">
+            {/* 3. Fresh Farm Orders */}
+            <div className="flex items-start gap-3 bg-[#062E17]/60 backdrop-blur-sm p-2.5 rounded-xl border border-emerald-500/20">
+              <div className="w-9 h-9 rounded-lg bg-[#0D4422] border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0 mt-0.5">
                 <Package className="w-4 h-4 stroke-[2]" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-white">Inventory</h4>
-                <p className="text-[11px] text-slate-300 mt-0.5 leading-snug">
-                  Monitor ingredients and stock.
+                <h4 className="text-xs sm:text-sm font-bold text-white">Fresh Farm Orders</h4>
+                <p className="text-[11px] text-emerald-200/90 mt-0.5 leading-snug">
+                  Fast morning deliveries.
                 </p>
               </div>
             </div>
 
-            {/* 4. Purchases */}
-            <div className="flex items-start gap-3 bg-[#260A15]/60 backdrop-blur-sm p-2.5 rounded-xl border border-white/5">
-              <div className="w-9 h-9 rounded-lg bg-[#33101E] border border-[#F97316]/40 flex items-center justify-center text-[#F97316] shrink-0 mt-0.5">
+            {/* 4. Digital Ledger */}
+            <div className="flex items-start gap-3 bg-[#062E17]/60 backdrop-blur-sm p-2.5 rounded-xl border border-emerald-500/20">
+              <div className="w-9 h-9 rounded-lg bg-[#0D4422] border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0 mt-0.5">
                 <Truck className="w-4 h-4 stroke-[2]" />
               </div>
               <div>
-                <h4 className="text-xs sm:text-sm font-bold text-white">Purchases</h4>
-                <p className="text-[11px] text-slate-300 mt-0.5 leading-snug">
-                  Track stock purchases.
+                <h4 className="text-xs sm:text-sm font-bold text-white">Digital Ledger</h4>
+                <p className="text-[11px] text-emerald-200/90 mt-0.5 leading-snug">
+                  Track payments and dues.
                 </p>
               </div>
             </div>
@@ -207,27 +207,27 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
         </div>
 
         {/* Bottom Decorative Store Outline Watermark */}
-        <div className="relative z-10 flex items-center justify-between text-slate-300 text-xs pt-4 border-t border-white/10">
+        <div className="relative z-10 flex items-center justify-between text-emerald-200 text-xs pt-4 border-t border-emerald-500/30">
           <div className="flex items-center gap-2">
-            <Store className="w-5 h-5 text-[#F97316]" />
-            <span className="text-xs text-slate-200 font-medium">BluNet IT Services • Poultry Cloud</span>
+            <Store className="w-5 h-5 text-[#86EFAC]" />
+            <span className="text-xs text-emerald-100 font-medium">BluNet IT Services • Poultry Cloud</span>
           </div>
-          <span className="text-[11px] text-orange-200/80 font-mono">RestoPilot v2.0</span>
+          <span className="text-[11px] text-emerald-300/80 font-mono">Chicken Farms v2.0</span>
         </div>
       </div>
 
       {/* ============================================================== */}
-      {/* RIGHT LOGIN PANEL (Matches screenshot exact form design)       */}
+      {/* RIGHT LOGIN PANEL (Green & White combination)                   */}
       {/* ============================================================== */}
       <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-6 sm:p-12 lg:p-16">
         <div className="w-full max-w-md space-y-6">
           {/* Header Title */}
           <div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight">
-              Welcome <span className="text-[#F97316]">Back!</span>
+              Welcome <span className="text-emerald-600">Back!</span>
             </h2>
             <p className="text-xs sm:text-sm text-[#64748B] mt-1.5 font-normal">
-              Enter your credentials to access your account.
+              Enter your credentials to access your Chicken Farms account.
             </p>
           </div>
 
@@ -252,7 +252,7 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="name@example.com or user_id"
-                className="w-full h-12 px-3.5 rounded-btn border border-[#E2E8F0] bg-white text-[#0F172A] text-sm focus:ring-2 focus:ring-[#F97316] focus:border-[#F97316] focus:outline-none transition-colors"
+                className="w-full h-12 px-3.5 rounded-btn border border-[#E2E8F0] bg-white text-[#0F172A] text-sm focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 focus:outline-none transition-colors"
                 autoFocus
               />
             </div>
@@ -268,7 +268,7 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
                       'Please contact your distributor admin to reset your credentials.'
                     )
                   }
-                  className="text-xs font-semibold text-[#F97316] hover:underline"
+                  className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:underline"
                 >
                   Forgot Password?
                 </button>
@@ -281,7 +281,7 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full h-12 pl-3.5 pr-10 rounded-btn border border-[#E2E8F0] bg-white text-[#0F172A] text-sm focus:ring-2 focus:ring-[#F97316] focus:border-[#F97316] focus:outline-none transition-colors"
+                  className="w-full h-12 pl-3.5 pr-10 rounded-btn border border-[#E2E8F0] bg-white text-[#0F172A] text-sm focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 focus:outline-none transition-colors"
                 />
                 <button
                   type="button"
@@ -300,7 +300,7 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded text-[#F97316] focus:ring-[#F97316] border-[#CBD5E1]"
+                  className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-600 border-[#CBD5E1]"
                 />
                 <span>Remember me</span>
               </label>
@@ -308,11 +308,11 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
               <span className="text-[11px] text-slate-400">Default pass: star123</span>
             </div>
 
-            {/* Solid Vibrant Orange Sign In Button */}
+            {/* Solid Vibrant Emerald Green Sign In Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 rounded-btn bg-[#F97316] hover:bg-[#EA580C] active:bg-[#C2410C] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all touch-manipulation disabled:opacity-60"
+              className="w-full h-12 rounded-btn bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all touch-manipulation disabled:opacity-60"
             >
               {isLoading ? (
                 <span>Signing in...</span>
@@ -335,9 +335,9 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
                   'The distributor creates consumer profiles. Please enter /admin in URL to create new consumer user IDs and passwords.'
                 )
               }
-              className="font-semibold text-[#F97316] hover:underline"
+              className="font-semibold text-emerald-600 hover:underline"
             >
-              Register your restaurant
+              Register your chicken shop
             </button>
           </div>
 
@@ -354,16 +354,16 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
             <button
               type="button"
               onClick={() => setShowDemoModal(true)}
-              className="w-full h-12 rounded-btn border border-[#E2E8F0] hover:bg-slate-50 text-[#0F172A] font-semibold text-xs flex items-center justify-center gap-2 transition-colors touch-manipulation"
+              className="w-full h-12 rounded-btn border border-[#E2E8F0] hover:bg-emerald-50/60 text-[#0F172A] font-semibold text-xs flex items-center justify-center gap-2 transition-colors touch-manipulation"
             >
-              <Store className="w-4 h-4 text-[#F97316]" />
+              <Store className="w-4 h-4 text-emerald-600" />
               <span>Select Registered Consumer ({shops.length} Available)</span>
             </button>
           ) : (
             <button
               type="button"
               onClick={() => navigate('/admin/shops')}
-              className="w-full h-12 rounded-btn border border-dashed border-[#F97316] hover:bg-orange-50/50 text-[#F97316] font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+              className="w-full h-12 rounded-btn border border-dashed border-emerald-600 hover:bg-emerald-50/50 text-emerald-700 font-bold text-xs flex items-center justify-center gap-2 transition-colors"
             >
               <Store className="w-4 h-4" />
               <span>No shops yet • Create Shop Accounts in /admin</span>
@@ -377,7 +377,7 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
               onClick={() => navigate('/admin')}
               className="text-xs font-semibold text-slate-600 hover:text-[#0F172A] inline-flex items-center gap-1.5"
             >
-              <ShieldCheck className="w-4 h-4 text-emerald-700" />
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span>Distributor Admin? Enter <strong>/admin</strong> directly</span>
             </button>
           </div>
@@ -409,7 +409,7 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
                 <div
                   key={shop.id}
                   onClick={() => handleQuickDemoLogin(shop)}
-                  className="p-3 hover:bg-orange-50/60 cursor-pointer transition-colors flex items-center justify-between text-xs"
+                  className="p-3 hover:bg-emerald-50/60 cursor-pointer transition-colors flex items-center justify-between text-xs"
                 >
                   <div>
                     <span className="font-bold text-sm text-textPrimary block">{shop.name}</span>

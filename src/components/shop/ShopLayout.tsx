@@ -76,7 +76,7 @@ export const ShopLayout: React.FC<ShopLayoutProps> = ({ onLogout }) => {
               </div>
               <div className="hidden sm:block">
                 <span className="font-extrabold text-base text-textPrimary tracking-tight block leading-none">
-                  ChickenLink
+                  Chicken Farms
                 </span>
                 <span className="text-[10px] text-slate-400 font-medium">By BluNet IT Services</span>
               </div>
