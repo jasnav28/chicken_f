@@ -27,6 +27,7 @@ import { Language, translations } from '../lib/i18n';
 import { soundEffects } from '../lib/audio';
 import { whatsAppService } from '../lib/whatsapp';
 import { getTodayDate } from '../lib/formatters';
+import { api } from '../lib/api';
 
 interface AppContextType {
   role: UserRole;
@@ -145,10 +146,107 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Current Shop for the Shop role
   const [currentShop, setCurrentShopState] = useState<Shop>(() => {
-    const savedShopId = localStorage.getItem('ckl_active_shop_id');
-    const matched = INITIAL_SHOPS.find((s) => s.id === savedShopId);
-    return matched || INITIAL_SHOPS[0];
+    const savedShopId =
+      localStorage.getItem('ckl_authenticated_shop_id') ||
+      localStorage.getItem('ckl_active_shop_id');
+    const savedShops = localStorage.getItem('ckl_shops');
+    if (savedShops) {
+      try {
+        const parsed: Shop[] = JSON.parse(savedShops);
+        const found = parsed.find((s) => s.id === savedShopId);
+        if (found) return found;
+        if (parsed.length > 0) return parsed[0];
+      } catch (e) {}
+    }
+    return {
+      id: '',
+      username: '',
+      password: '',
+      name: '',
+      owner_name: '',
+      phone: '',
+      address: '',
+      area_route: 'North Route',
+      credit_limit: 50000,
+      outstanding_balance: 0,
+      is_active: true,
+      created_at: new Date().toISOString(),
+    };
   });
+
+  // Fetch real data from PostgreSQL API
+  useEffect(() => {
+    let isMounted = true;
+    const fetchRemoteData = async () => {
+      try {
+        const [
+          remoteShops,
+          remoteProducts,
+          remoteOrders,
+          remotePayments,
+          remoteLedger,
+          remoteSettings,
+        ] = await Promise.allSettled([
+          api.getShops(),
+          api.getProducts(),
+          api.getOrders(),
+          api.getPayments(),
+          api.getLedger(),
+          api.getSettings(),
+        ]);
+
+        if (!isMounted) return;
+
+        if (remoteShops.status === 'fulfilled' && Array.isArray(remoteShops.value)) {
+          setShops(remoteShops.value);
+          const savedShopId =
+            localStorage.getItem('ckl_authenticated_shop_id') ||
+            localStorage.getItem('ckl_active_shop_id');
+          const matched = remoteShops.value.find((s) => s.id === savedShopId);
+          if (matched) {
+            setCurrentShopState(matched);
+          } else if (remoteShops.value.length > 0 && !savedShopId) {
+            setCurrentShopState(remoteShops.value[0]);
+          }
+        }
+
+        if (
+          remoteProducts.status === 'fulfilled' &&
+          Array.isArray(remoteProducts.value) &&
+          remoteProducts.value.length > 0
+        ) {
+          setProducts(remoteProducts.value);
+        }
+
+        if (remoteOrders.status === 'fulfilled' && Array.isArray(remoteOrders.value)) {
+          setOrders(remoteOrders.value);
+        }
+
+        if (remotePayments.status === 'fulfilled' && Array.isArray(remotePayments.value)) {
+          setPayments(remotePayments.value);
+        }
+
+        if (remoteLedger.status === 'fulfilled' && Array.isArray(remoteLedger.value)) {
+          setLedger(remoteLedger.value);
+        }
+
+        if (
+          remoteSettings.status === 'fulfilled' &&
+          remoteSettings.value &&
+          !remoteSettings.value.error
+        ) {
+          setSettings((prev) => ({ ...prev, ...remoteSettings.value }));
+        }
+      } catch (err) {
+        console.warn('API sync notice:', err);
+      }
+    };
+
+    fetchRemoteData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Sync to LocalStorage
   useEffect(() => {
@@ -287,6 +385,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       soundEffects.playOrderBell();
     }
 
+    // Save order to PostgreSQL
+    if (currentShop.id) {
+      api.createOrder({
+        shop_id: currentShop.id,
+        delivery_date: deliveryDate,
+        delivery_slot: deliverySlot,
+        notes: notes || '',
+        items: itemsList.map((item) => ({
+          product_id: item.productId,
+          ordered_qty: item.orderedQty,
+        })),
+      }).catch((err) => console.warn('Could not sync order to database:', err));
+    }
+
     return newOrder;
   };
 
@@ -324,6 +436,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           updated_at: new Date().toISOString(),
         };
       })
+    );
+
+    api.updateDeliveredWeights(orderId, deliveredItems).catch((err) =>
+      console.warn('Could not sync delivered weights:', err)
     );
   };
 
@@ -437,6 +553,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (settings.sound_alert_enabled) {
       soundEffects.playSuccessTone();
     }
+
+    api.updateOrderStatus(orderId, newStatus).catch((err) =>
+      console.warn('Could not sync status:', err)
+    );
   };
 
   const bulkConfirmOrders = (orderIds: string[]) => {
@@ -530,6 +650,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       soundEffects.playSuccessTone();
     }
 
+    api.recordPayment({
+      shop_id: shopId,
+      amount,
+      mode,
+      reference_no: refNo?.trim() || '',
+      notes: note?.trim() || '',
+      payment_date: todayDate,
+    }).catch((err) => console.warn('Could not sync payment:', err));
+
     return newPayment;
   };
 
@@ -563,6 +692,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (settings.sound_alert_enabled) {
       soundEffects.playSuccessTone();
     }
+
+    api.publishRates(updatedRates).catch((err) => console.warn('Could not sync rates:', err));
   };
 
   const addShop = (shopData: Omit<Shop, 'id' | 'created_at' | 'outstanding_balance'>): Shop => {
@@ -573,6 +704,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       created_at: new Date().toISOString(),
     };
     setShops((prev) => [...prev, newShop]);
+
+    api.createShop(newShop).catch((err) => console.warn('Could not sync new shop:', err));
+
     return newShop;
   };
 
@@ -583,12 +717,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (currentShop.id === shopId) {
       setCurrentShopState((prev) => ({ ...prev, ...shopData }));
     }
+    api.updateShop(shopId, shopData).catch((err) => console.warn('Could not sync shop update:', err));
   };
 
   const toggleShopStatus = (shopId: string) => {
     setShops((prev) =>
       prev.map((s) => (s.id === shopId ? { ...s, is_active: !s.is_active } : s))
     );
+    api.toggleShopStatus(shopId).catch((err) => console.warn('Could not sync toggle status:', err));
   };
 
   const addProduct = (productData: Omit<Product, 'id' | 'yesterday_rate'>): Product => {
@@ -675,18 +811,32 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const resetDemoData = () => {
-    localStorage.clear();
-    setSettings(INITIAL_SETTINGS);
-    setProducts(INITIAL_PRODUCTS);
-    setShops(INITIAL_SHOPS);
-    setOrders(INITIAL_ORDERS);
-    setPayments(INITIAL_PAYMENTS);
-    setLedger(INITIAL_LEDGER);
-    setStandingOrders(INITIAL_STANDING_ORDERS);
-    setNotifications(INITIAL_NOTIFICATIONS);
-    setCurrentShopState(INITIAL_SHOPS[0]);
-    setRoleState('shop');
-    setLanguageState('en');
+    localStorage.removeItem('ckl_orders');
+    localStorage.removeItem('ckl_payments');
+    localStorage.removeItem('ckl_ledger');
+    localStorage.removeItem('ckl_shops');
+    localStorage.removeItem('ckl_standing');
+    localStorage.removeItem('ckl_notifications');
+    setOrders([]);
+    setPayments([]);
+    setLedger([]);
+    setShops([]);
+    setStandingOrders([]);
+    setNotifications([]);
+    setCurrentShopState({
+      id: '',
+      username: '',
+      password: '',
+      name: '',
+      owner_name: '',
+      phone: '',
+      address: '',
+      area_route: 'North Route',
+      credit_limit: 50000,
+      outstanding_balance: 0,
+      is_active: true,
+      created_at: new Date().toISOString(),
+    });
   };
 
   return (

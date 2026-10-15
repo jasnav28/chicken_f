@@ -52,17 +52,28 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate, onSe
   // Over-credit-limit shops
   const creditAlertShops = shops.filter((s) => s.outstanding_balance >= s.credit_limit * 0.85);
 
-  // 7-day sales simulation
-  const last7Days = [
-    { day: 'Wed', date: '08 Oct', sales: 62400, kg: 380 },
-    { day: 'Thu', date: '09 Oct', sales: 71200, kg: 440 },
-    { day: 'Fri', date: '10 Oct', sales: 88500, kg: 530 },
-    { day: 'Sat', date: '11 Oct', sales: 114000, kg: 690 },
-    { day: 'Sun', date: '12 Oct', sales: 135000, kg: 820 },
-    { day: 'Mon', date: '13 Oct', sales: 68900, kg: 410 },
-    { day: 'Tue', date: '14 Oct', sales: 78500, kg: 480 },
-  ];
-  const maxSales = Math.max(...last7Days.map((d) => d.sales));
+  // 7-day sales calculation from real orders
+  const last7Days = Array.from({ length: 7 }).map((_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    const dateStr = d.toISOString().split('T')[0];
+    const dayLabel = d.toLocaleDateString('en-IN', { weekday: 'short' });
+    const shortDate = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+
+    const dayOrders = orders.filter(
+      (o) => (o.order_date === dateStr || o.delivery_date === dateStr) && o.status !== 'Cancelled'
+    );
+    const daySales = dayOrders.reduce((sum, o) => sum + (o.final_amount ?? o.estimated_amount), 0);
+    const dayKg = dayOrders.reduce((sum, o) => sum + (o.total_delivered_qty ?? o.total_ordered_qty), 0);
+
+    return {
+      day: dayLabel,
+      date: shortDate,
+      sales: daySales,
+      kg: dayKg,
+    };
+  });
+  const maxSales = Math.max(1, ...last7Days.map((d) => d.sales));
 
   const handleGenerateStanding = () => {
     const count = generateOrdersFromStanding();

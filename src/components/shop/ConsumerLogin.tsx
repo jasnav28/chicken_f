@@ -81,9 +81,8 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
       setRole('shop');
       if (onLoginSuccess) {
         onLoginSuccess();
-      } else {
-        navigate('/');
       }
+      navigate('/');
     }, 350);
   };
 
@@ -94,9 +93,8 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
     setShowDemoModal(false);
     if (onLoginSuccess) {
       onLoginSuccess();
-    } else {
-      navigate('/');
     }
+    navigate('/');
   };
 
   return (
@@ -351,15 +349,26 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
             </span>
           </div>
 
-          {/* Secondary Outline Button: Quick Demo Consumer Login */}
-          <button
-            type="button"
-            onClick={() => setShowDemoModal(true)}
-            className="w-full h-12 rounded-btn border border-[#E2E8F0] hover:bg-slate-50 text-[#0F172A] font-semibold text-xs flex items-center justify-center gap-2 transition-colors touch-manipulation"
-          >
-            <Store className="w-4 h-4 text-[#F97316]" />
-            <span>Select Registered Restaurant (1-Click Demo)</span>
-          </button>
+          {/* Secondary Outline Button */}
+          {shops.length > 0 ? (
+            <button
+              type="button"
+              onClick={() => setShowDemoModal(true)}
+              className="w-full h-12 rounded-btn border border-[#E2E8F0] hover:bg-slate-50 text-[#0F172A] font-semibold text-xs flex items-center justify-center gap-2 transition-colors touch-manipulation"
+            >
+              <Store className="w-4 h-4 text-[#F97316]" />
+              <span>Select Registered Consumer ({shops.length} Available)</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => navigate('/admin/shops')}
+              className="w-full h-12 rounded-btn border border-dashed border-[#F97316] hover:bg-orange-50/50 text-[#F97316] font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+            >
+              <Store className="w-4 h-4" />
+              <span>No shops yet • Create Shop Accounts in /admin</span>
+            </button>
+          )}
 
           {/* Direct Link to /admin */}
           <div className="pt-2 text-center border-t border-slate-100">
