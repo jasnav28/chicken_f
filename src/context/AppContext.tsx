@@ -94,8 +94,30 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+const DUMMY_SHOP_NAMES = [
+  'Star Chicken Center',
+  'Al-Madina Meat Mart',
+  'Sri Venkateshwara Poultry',
+  'Royal Fresh Chicken',
+  'New Taj Broiler Center',
+  'Cauvery Meat & Fish Stall',
+];
+
+const CLEAN_DATA_VERSION = 'chicken_farms_clean_real_data_v3';
+
+// Clean old cached dummy data from previous runs
+if (typeof window !== 'undefined' && localStorage.getItem('ckl_clean_data_version') !== CLEAN_DATA_VERSION) {
+  localStorage.removeItem('ckl_shops');
+  localStorage.removeItem('ckl_orders');
+  localStorage.removeItem('ckl_payments');
+  localStorage.removeItem('ckl_ledger');
+  localStorage.removeItem('ckl_standing');
+  localStorage.removeItem('ckl_authenticated_shop_id');
+  localStorage.setItem('ckl_clean_data_version', CLEAN_DATA_VERSION);
+}
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // App State initialized with LocalStorage cache or mock defaults
+  // App State initialized with LocalStorage cache or clean defaults
   const [role, setRoleState] = useState<UserRole>(() => {
     return (localStorage.getItem('ckl_role') as UserRole) || 'shop';
   });
@@ -116,22 +138,48 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [shops, setShops] = useState<Shop[]>(() => {
     const saved = localStorage.getItem('ckl_shops');
-    return saved ? JSON.parse(saved) : INITIAL_SHOPS;
+    if (!saved) return [];
+    try {
+      const parsed: Shop[] = JSON.parse(saved);
+      return parsed.filter(
+        (s) => !s.id.startsWith('c1010000-') && !DUMMY_SHOP_NAMES.includes(s.name)
+      );
+    } catch {
+      return [];
+    }
   });
 
   const [orders, setOrders] = useState<Order[]>(() => {
     const saved = localStorage.getItem('ckl_orders');
-    return saved ? JSON.parse(saved) : INITIAL_ORDERS;
+    if (!saved) return [];
+    try {
+      const parsed: Order[] = JSON.parse(saved);
+      return parsed.filter((o) => !o.id.startsWith('d1010000-') && !o.order_number?.startsWith('CKL-20261014-'));
+    } catch {
+      return [];
+    }
   });
 
   const [payments, setPayments] = useState<Payment[]>(() => {
     const saved = localStorage.getItem('ckl_payments');
-    return saved ? JSON.parse(saved) : INITIAL_PAYMENTS;
+    if (!saved) return [];
+    try {
+      const parsed: Payment[] = JSON.parse(saved);
+      return parsed.filter((p) => !p.id.startsWith('e1010000-'));
+    } catch {
+      return [];
+    }
   });
 
   const [ledger, setLedger] = useState<LedgerEntry[]>(() => {
     const saved = localStorage.getItem('ckl_ledger');
-    return saved ? JSON.parse(saved) : INITIAL_LEDGER;
+    if (!saved) return [];
+    try {
+      const parsed: LedgerEntry[] = JSON.parse(saved);
+      return parsed.filter((l) => !l.shop_id?.startsWith('c1010000-'));
+    } catch {
+      return [];
+    }
   });
 
   const [standingOrders, setStandingOrders] = useState<StandingOrder[]>(() => {
@@ -198,15 +246,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (!isMounted) return;
 
         if (remoteShops.status === 'fulfilled' && Array.isArray(remoteShops.value)) {
-          setShops(remoteShops.value);
+          const cleanRemoteShops = remoteShops.value.filter(
+            (s: Shop) => !s.id.startsWith('c1010000-') && !DUMMY_SHOP_NAMES.includes(s.name)
+          );
+          setShops(cleanRemoteShops);
           const savedShopId =
             localStorage.getItem('ckl_authenticated_shop_id') ||
             localStorage.getItem('ckl_active_shop_id');
-          const matched = remoteShops.value.find((s) => s.id === savedShopId);
+          const matched = cleanRemoteShops.find((s) => s.id === savedShopId);
           if (matched) {
             setCurrentShopState(matched);
-          } else if (remoteShops.value.length > 0 && !savedShopId) {
-            setCurrentShopState(remoteShops.value[0]);
+          } else if (cleanRemoteShops.length > 0 && !savedShopId) {
+            setCurrentShopState(cleanRemoteShops[0]);
           }
         }
 
@@ -219,15 +270,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
 
         if (remoteOrders.status === 'fulfilled' && Array.isArray(remoteOrders.value)) {
-          setOrders(remoteOrders.value);
+          const cleanRemoteOrders = remoteOrders.value.filter(
+            (o: Order) => !o.id.startsWith('d1010000-') && !o.order_number?.startsWith('CKL-20261014-')
+          );
+          setOrders(cleanRemoteOrders);
         }
 
         if (remotePayments.status === 'fulfilled' && Array.isArray(remotePayments.value)) {
-          setPayments(remotePayments.value);
+          const cleanRemotePayments = remotePayments.value.filter(
+            (p: Payment) => !p.id.startsWith('e1010000-')
+          );
+          setPayments(cleanRemotePayments);
         }
 
         if (remoteLedger.status === 'fulfilled' && Array.isArray(remoteLedger.value)) {
-          setLedger(remoteLedger.value);
+          const cleanRemoteLedger = remoteLedger.value.filter(
+            (l: LedgerEntry) => !l.shop_id?.startsWith('c1010000-')
+          );
+          setLedger(cleanRemoteLedger);
         }
 
         if (
@@ -810,13 +870,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
   };
 
-  const resetDemoData = () => {
+  const resetDemoData = async () => {
+    try {
+      await api.resetDatabase();
+    } catch (e) {
+      console.warn('Backend reset notice:', e);
+    }
     localStorage.removeItem('ckl_orders');
     localStorage.removeItem('ckl_payments');
     localStorage.removeItem('ckl_ledger');
     localStorage.removeItem('ckl_shops');
     localStorage.removeItem('ckl_standing');
     localStorage.removeItem('ckl_notifications');
+    localStorage.removeItem('ckl_authenticated_shop_id');
     setOrders([]);
     setPayments([]);
     setLedger([]);

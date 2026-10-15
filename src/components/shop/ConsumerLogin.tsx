@@ -25,6 +25,20 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
   const { shops, setCurrentShop, setRole } = useApp();
   const navigate = useNavigate();
 
+  // Exclude legacy dummy seed shops
+  const realShops = shops.filter(
+    (s) =>
+      !s.id.startsWith('c1010000-') &&
+      ![
+        'Star Chicken Center',
+        'Al-Madina Meat Mart',
+        'Sri Venkateshwara Poultry',
+        'Royal Fresh Chicken',
+        'New Taj Broiler Center',
+        'Cauvery Meat & Fish Stall',
+      ].includes(s.name)
+  );
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
@@ -49,8 +63,8 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
     setIsLoading(true);
     const cleanUser = username.trim().toLowerCase();
 
-    // Match consumer in shops database
-    const matched = shops.find(
+    // Match consumer in real shops database
+    const matched = realShops.find(
       (s) =>
         s.username?.toLowerCase() === cleanUser ||
         s.phone === cleanUser ||
@@ -105,7 +119,7 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
       <div
         className="w-full md:w-1/2 p-8 sm:p-12 lg:p-16 flex flex-col justify-between text-white relative overflow-hidden min-h-[500px] md:min-h-screen border-b md:border-b-0 md:border-r border-[#14532D]"
         style={{
-          backgroundImage: `linear-gradient(135deg, rgba(20, 83, 45, 0.92) 0%, rgba(22, 101, 52, 0.86) 50%, rgba(5, 46, 22, 0.94) 100%), url('/poultry-farm-bg.jpg')`,
+          backgroundImage: `linear-gradient(135deg, rgba(16, 68, 38, 0.55) 0%, rgba(21, 128, 61, 0.46) 50%, rgba(5, 46, 22, 0.58) 100%), url('/poultry-farm-bg.jpg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -113,7 +127,7 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
       >
         {/* Subtle Decorative Pattern Layer */}
         <div
-          className="absolute inset-0 opacity-15 pointer-events-none"
+          className="absolute inset-0 opacity-[0.08] pointer-events-none"
           style={{
             backgroundImage: `radial-gradient(#86EFAC 1px, transparent 1px)`,
             backgroundSize: `36px 36px`,
@@ -139,12 +153,12 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
 
         {/* Center: Main Headline, Subtitle & 4 Feature Badges */}
         <div className="relative z-10 my-auto py-8 max-w-lg">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
             Manage your poultry supply, simplify your{' '}
-            <span className="text-[#86EFAC]">success.</span>
+            <span className="text-[#86EFAC] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">success.</span>
           </h1>
 
-          <p className="text-sm sm:text-base text-emerald-100/90 mt-4 leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-white mt-4 leading-relaxed font-medium drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]">
             Chicken Farms poultry distribution platform by BluNet IT Services helps you handle daily fresh poultry
             orders, smart scale weight billing, live market rates, and digital ledger tracking — all in one
             convenient platform.
@@ -153,7 +167,7 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
           {/* 4 Feature Cards (2x2 Grid) */}
           <div className="grid grid-cols-2 gap-4 mt-8">
             {/* 1. Live Daily Rates */}
-            <div className="flex items-start gap-3 bg-[#062E17]/60 backdrop-blur-sm p-2.5 rounded-xl border border-emerald-500/20">
+            <div className="flex items-start gap-3 bg-[#062E17]/80 backdrop-blur-md p-2.5 rounded-xl border border-emerald-400/30 shadow-md">
               <div className="w-9 h-9 rounded-lg bg-[#0D4422] border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0 mt-0.5">
                 <BarChart3 className="w-4 h-4 stroke-[2]" />
               </div>
@@ -350,14 +364,14 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
           </div>
 
           {/* Secondary Outline Button */}
-          {shops.length > 0 ? (
+          {realShops.length > 0 ? (
             <button
               type="button"
               onClick={() => setShowDemoModal(true)}
               className="w-full h-12 rounded-btn border border-[#E2E8F0] hover:bg-emerald-50/60 text-[#0F172A] font-semibold text-xs flex items-center justify-center gap-2 transition-colors touch-manipulation"
             >
               <Store className="w-4 h-4 text-emerald-600" />
-              <span>Select Registered Consumer ({shops.length} Available)</span>
+              <span>Select Registered Consumer ({realShops.length} Available)</span>
             </button>
           ) : (
             <button
@@ -405,7 +419,7 @@ export const ConsumerLogin: React.FC<ConsumerLoginProps> = ({ onLoginSuccess }) 
             </div>
 
             <div className="divide-y divide-border my-3 max-h-72 overflow-y-auto">
-              {shops.map((shop) => (
+              {realShops.map((shop) => (
                 <div
                   key={shop.id}
                   onClick={() => handleQuickDemoLogin(shop)}

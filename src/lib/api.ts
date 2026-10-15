@@ -185,4 +185,13 @@ export const api = {
     if (!res.ok) throw new Error(data.error || 'Failed to update settings');
     return data;
   },
+
+  async resetDatabase() {
+    const res = await fetch(`${API_BASE}/settings/reset-data`, {
+      method: 'POST',
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to reset database');
+    return data;
+  },
 };

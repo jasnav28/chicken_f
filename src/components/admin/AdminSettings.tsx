@@ -271,15 +271,22 @@ export const AdminSettings: React.FC = () => {
         <div className="flex items-center justify-between pt-2">
           <button
             type="button"
-            onClick={() => {
-              if (window.confirm('Reset all demo data to fresh initial seed state?')) {
-                resetDemoData();
+            onClick={async () => {
+              if (
+                window.confirm(
+                  'Are you sure you want to remove all dummy data? This will clear all dummy shops, orders, payments, and ledger entries from PostgreSQL so you can start with 100% clean real data.'
+                )
+              ) {
+                await resetDemoData();
+                alert(
+                  'Database cleaned successfully! All dummy shops and orders have been removed. You can now create real consumer accounts in /admin/shops.'
+                );
               }
             }}
             className="h-11 px-4 rounded-btn border border-red-200 text-red-600 hover:bg-red-50 font-semibold flex items-center gap-1.5 transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>Reset Demo Database</span>
+            <span>Clean Database (Start Real Data)</span>
           </button>
 
           <button
