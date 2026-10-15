@@ -13,6 +13,7 @@ import {
   LogOut,
   ChevronRight,
   User,
+  ShieldAlert,
 } from 'lucide-react';
 
 interface ShopProfileProps {
@@ -31,149 +32,156 @@ export const ShopProfile: React.FC<ShopProfileProps> = ({ onOpenStandingOrders, 
   ];
 
   return (
-    <div className="p-4 pb-24 space-y-4">
-      {/* Profile Header */}
-      <div className="p-4 rounded-card bg-surface border border-border shadow-subtle flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-emerald-100 text-brand flex items-center justify-center shrink-0">
-          <Store className="w-6 h-6 stroke-[2]" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <h1 className="font-bold text-base text-textPrimary truncate">{currentShop.name}</h1>
-          <p className="text-xs text-textSecondary flex items-center gap-1 mt-0.5">
-            <User className="w-3 h-3 text-slate-400" />
-            {currentShop.owner_name}
-          </p>
-        </div>
-      </div>
-
-      {/* Shop Details Card */}
-      <div className="rounded-card border border-border bg-surface overflow-hidden">
-        <div className="p-3 bg-slate-50 border-b border-border text-xs font-bold uppercase tracking-wider text-textSecondary">
-          Shop Registration Details
-        </div>
-        <div className="divide-y divide-border text-xs">
-          <div className="p-3 flex items-center justify-between">
-            <span className="text-textSecondary flex items-center gap-2">
-              <Phone className="w-3.5 h-3.5 text-slate-400" />
-              Phone Number
-            </span>
-            <span className="font-semibold text-textPrimary">{currentShop.phone}</span>
+    <div className="space-y-6 pb-24 md:pb-12">
+      {/* Profile Header Card */}
+      <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-brand flex items-center justify-center shrink-0">
+            <Store className="w-7 h-7 stroke-[2]" />
           </div>
-
-          <div className="p-3 flex items-start justify-between gap-4">
-            <span className="text-textSecondary flex items-center gap-2 shrink-0">
-              <MapPin className="w-3.5 h-3.5 text-slate-400" />
-              Address
-            </span>
-            <span className="font-medium text-textPrimary text-right">{currentShop.address}</span>
-          </div>
-
-          <div className="p-3 flex items-center justify-between">
-            <span className="text-textSecondary">Assigned Delivery Route</span>
-            <span className="font-semibold text-brand px-2 py-0.5 rounded bg-emerald-50 border border-emerald-100">
-              {currentShop.area_route}
-            </span>
-          </div>
-
-          <div className="p-3 flex items-center justify-between">
-            <span className="text-textSecondary flex items-center gap-2">
-              <Shield className="w-3.5 h-3.5 text-slate-400" />
-              Credit Limit
-            </span>
-            <span className="font-bold text-textPrimary tabular-nums">
-              {formatINR(currentShop.credit_limit, false)}
-            </span>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="font-extrabold text-xl sm:text-2xl text-textPrimary">{currentShop.name}</h1>
+              <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-brand text-xs font-bold uppercase">
+                {currentShop.area_route}
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-textSecondary flex items-center gap-1.5 mt-0.5">
+              <User className="w-3.5 h-3.5 text-slate-400" />
+              Owner: <strong className="text-slate-700">{currentShop.owner_name}</strong>
+              <span className="text-slate-300">•</span>
+              <span>ID: <strong className="font-mono text-brand">{currentShop.username}</strong></span>
+            </p>
           </div>
         </div>
-      </div>
 
-      {/* Language Selector Card */}
-      <div className="rounded-card border border-border bg-surface p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Globe className="w-4 h-4 text-brand" />
-          <h2 className="text-xs font-bold uppercase tracking-wider text-textSecondary">
-            {t.selectLanguage}
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          {languages.map((l) => (
-            <button
-              key={l.code}
-              type="button"
-              onClick={() => setLanguage(l.code)}
-              className={`p-3 rounded-btn border text-left transition-all ${
-                language === l.code
-                  ? 'border-brand bg-emerald-50/70 text-brand shadow-sm font-semibold'
-                  : 'border-border bg-surface text-textPrimary hover:bg-slate-50'
-              }`}
-            >
-              <div className="text-sm font-medium">{l.native}</div>
-              <div className="text-[11px] text-textSecondary">{l.label}</div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Standing Orders Shortcut */}
-      <button
-        type="button"
-        onClick={onOpenStandingOrders}
-        className="w-full p-3.5 rounded-card border border-border bg-surface hover:bg-slate-50 flex items-center justify-between transition-colors shadow-subtle touch-manipulation"
-      >
-        <div className="flex items-center gap-2.5">
-          <Layers className="w-4 h-4 text-brand" />
-          <div className="text-left">
-            <span className="text-sm font-semibold text-textPrimary block">{t.standingOrders}</span>
-            <span className="text-xs text-textSecondary">Manage automatic recurring daily orders</span>
-          </div>
-        </div>
-        <ChevronRight className="w-4 h-4 text-slate-400" />
-      </button>
-
-      {/* Switch Shop Demo Dropdown */}
-      <div className="p-4 rounded-card border border-border bg-slate-50">
-        <label className="block text-xs font-bold uppercase tracking-wider text-textSecondary mb-1.5">
-          {t.switchShop}
-        </label>
-        <select
-          value={currentShop.id}
-          onChange={(e) => {
-            const matched = shops.find((s) => s.id === e.target.value);
-            if (matched) setCurrentShop(matched);
-          }}
-          className="w-full h-11 px-3 rounded-btn border border-border bg-surface text-xs font-medium text-textPrimary focus:outline-none focus:ring-1 focus:ring-brand"
+        <button
+          type="button"
+          onClick={onLogout}
+          className="self-start sm:self-auto px-4 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold border border-red-200 flex items-center gap-1.5 transition-colors"
         >
-          {shops.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name} - {s.owner_name} ({s.area_route})
-            </option>
-          ))}
-        </select>
+          <LogOut className="w-3.5 h-3.5" />
+          <span>{t.logout}</span>
+        </button>
       </div>
 
-      {/* Distributor Support Contact */}
-      <div className="p-4 rounded-card border border-border bg-surface text-center space-y-2">
-        <span className="text-xs text-textSecondary block">Distributor Helpline</span>
-        <div className="text-sm font-bold text-textPrimary">{settings.business_name}</div>
-        <a
-          href={`tel:${settings.phone}`}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-btn bg-slate-100 hover:bg-slate-200 text-textPrimary font-semibold text-xs transition-colors"
-        >
-          <PhoneCall className="w-3.5 h-3.5 text-brand" />
-          <span>Call: {settings.phone}</span>
-        </a>
-      </div>
+      {/* 2-Column Desktop Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Left Column: Registration & Location Details */}
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-slate-200/80 bg-white overflow-hidden shadow-sm">
+            <div className="p-4 bg-slate-50 border-b border-slate-200/80 text-xs font-bold uppercase tracking-wider text-textSecondary">
+              Shop Registration Details
+            </div>
+            <div className="divide-y divide-slate-100 text-xs sm:text-sm">
+              <div className="p-4 flex items-center justify-between">
+                <span className="text-textSecondary flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-slate-400" />
+                  Phone Number
+                </span>
+                <span className="font-bold text-textPrimary font-mono">{currentShop.phone}</span>
+              </div>
 
-      {/* Logout Button */}
-      <button
-        type="button"
-        onClick={onLogout}
-        className="w-full h-12 rounded-btn bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold border border-red-200 flex items-center justify-center gap-2 transition-colors touch-manipulation"
-      >
-        <LogOut className="w-4 h-4" />
-        <span>{t.logout}</span>
-      </button>
+              <div className="p-4 flex items-start justify-between gap-4">
+                <span className="text-textSecondary flex items-center gap-2 shrink-0">
+                  <MapPin className="w-4 h-4 text-slate-400" />
+                  Delivery Address
+                </span>
+                <span className="font-medium text-textPrimary text-right max-w-xs">{currentShop.address}</span>
+              </div>
+
+              <div className="p-4 flex items-center justify-between">
+                <span className="text-textSecondary">Assigned Delivery Route</span>
+                <span className="font-bold text-brand px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-100 text-xs">
+                  {currentShop.area_route}
+                </span>
+              </div>
+
+              <div className="p-4 flex items-center justify-between">
+                <span className="text-textSecondary flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-slate-400" />
+                  Credit Limit
+                </span>
+                <span className="font-black text-textPrimary tabular-nums">
+                  {formatINR(currentShop.credit_limit, false)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Standing Orders Shortcut Card */}
+          <button
+            type="button"
+            onClick={onOpenStandingOrders}
+            className="w-full p-5 rounded-2xl border border-slate-200/80 bg-white hover:bg-slate-50 flex items-center justify-between transition-colors shadow-sm text-left group"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-brand">
+                <Layers className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-sm font-bold text-textPrimary block group-hover:text-brand transition-colors">
+                  {t.standingOrders}
+                </span>
+                <span className="text-xs text-textSecondary">
+                  Set automatic recurring orders for everyday fresh delivery
+                </span>
+              </div>
+            </div>
+            <ChevronRight className="w-5 h-5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        </div>
+
+        {/* Right Column: Language & Distributor Contact */}
+        <div className="space-y-6">
+          {/* Language Selector Card */}
+          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-2 mb-3.5">
+              <Globe className="w-4 h-4 text-brand" />
+              <h2 className="text-xs font-bold uppercase tracking-wider text-textSecondary">
+                {t.selectLanguage}
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {languages.map((l) => (
+                <button
+                  key={l.code}
+                  type="button"
+                  onClick={() => setLanguage(l.code)}
+                  className={`p-3.5 rounded-xl border text-left transition-all ${
+                    language === l.code
+                      ? 'border-brand bg-emerald-50/80 text-brand shadow-sm font-bold ring-1 ring-brand/30'
+                      : 'border-slate-200 bg-white text-textPrimary hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="text-sm font-bold">{l.native}</div>
+                  <div className="text-[11px] text-textSecondary mt-0.5">{l.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Distributor Support Contact */}
+          <div className="p-6 rounded-2xl border border-slate-200/80 bg-white text-center space-y-3 shadow-sm">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+              Distributor Support & Dispatch Desk
+            </span>
+            <div className="text-base font-extrabold text-textPrimary">{settings.business_name}</div>
+            <p className="text-xs text-slate-500 max-w-sm mx-auto">{settings.address}</p>
+
+            <div className="pt-2">
+              <a
+                href={`tel:${settings.phone}`}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors shadow-sm"
+              >
+                <PhoneCall className="w-4 h-4 text-emerald-400" />
+                <span>Call Helpline: {settings.phone}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

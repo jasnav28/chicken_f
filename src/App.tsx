@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
 import { RoleSwitcher } from './components/common/RoleSwitcher';
 import { ShopLayout } from './components/shop/ShopLayout';
@@ -18,15 +18,32 @@ const AdminRouteWrapper: React.FC = () => {
 };
 
 const MainRoutes: React.FC = () => {
+  const [consumerAuth, setConsumerAuth] = useState<boolean>(() => {
+    return Boolean(localStorage.getItem('ckl_authenticated_shop_id'));
+  });
+
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isLoginPage = location.pathname === '/login' || (!consumerAuth && !isAdminRoute);
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-textPrimary">
-      {/* Top Demo & URL Helper Switcher */}
-      <RoleSwitcher />
+      {/* Top Demo Switcher: Hidden on login screen, visible when authenticated or in Admin */}
+      {!isLoginPage && <RoleSwitcher />}
 
-      <div className="flex-1">
+      <div className="flex-1 flex flex-col">
         <Routes>
-          {/* Consumer Login Page (Matches the user's uploaded RestoPilot screenshot) */}
-          <Route path="/login" element={<ConsumerLogin />} />
+          {/* Consumer Login Page (Starts here for unauthenticated visitors) */}
+          <Route
+            path="/login"
+            element={
+              <ConsumerLogin
+                onLoginSuccess={() => {
+                  setConsumerAuth(true);
+                }}
+              />
+            }
+          />
 
           {/* Admin Management (Direct access via /admin in URL) */}
           <Route path="/admin/*" element={<AdminRouteWrapper />} />
@@ -34,7 +51,25 @@ const MainRoutes: React.FC = () => {
           <Route path="/admin/login" element={<AdminLogin onLoginSuccess={() => {}} />} />
 
           {/* Consumer Shop Ordering App */}
-          <Route path="/" element={<ShopLayout />} />
+          <Route
+            path="/"
+            element={
+              consumerAuth ? (
+                <ShopLayout
+                  onLogout={() => {
+                    localStorage.removeItem('ckl_authenticated_shop_id');
+                    setConsumerAuth(false);
+                  }}
+                />
+              ) : (
+                <ConsumerLogin
+                  onLoginSuccess={() => {
+                    setConsumerAuth(true);
+                  }}
+                />
+              )
+            }
+          />
 
           {/* Fallback to Home */}
           <Route path="*" element={<Navigate to="/" replace />} />

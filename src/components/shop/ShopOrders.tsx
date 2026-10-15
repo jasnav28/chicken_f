@@ -57,35 +57,35 @@ export const ShopOrders: React.FC = () => {
   };
 
   return (
-    <div className="p-4 pb-24 space-y-4">
+    <div className="space-y-6 pb-24 md:pb-12">
       {/* Title & Filter Tabs */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-textPrimary">{t.orders}</h1>
-          <p className="text-xs text-textSecondary">{shopOrders.length} total orders recorded</p>
+          <h1 className="text-2xl font-extrabold text-textPrimary tracking-tight">{t.orders}</h1>
+          <p className="text-xs sm:text-sm text-textSecondary">{shopOrders.length} total orders recorded</p>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200">
+          {(['All', 'Active', 'Delivered', 'Cancelled'] as const).map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setFilter(tab)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                filter === tab
+                  ? 'bg-white text-textPrimary shadow-sm'
+                  : 'text-textSecondary hover:text-textPrimary'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-btn overflow-x-auto">
-        {(['All', 'Active', 'Delivered', 'Cancelled'] as const).map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setFilter(tab)}
-            className={`flex-1 min-w-[70px] py-1.5 rounded-lg text-xs font-semibold transition-all ${
-              filter === tab
-                ? 'bg-surface text-textPrimary shadow-subtle'
-                : 'text-textSecondary hover:text-textPrimary'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Orders List (Stacked Cards for Mobile First) */}
-      <div className="space-y-3">
+      {/* Orders List (Responsive Grid on Computer) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.length === 0 ? (
           <div className="p-8 text-center bg-surface rounded-card border border-border">
             <FileText className="w-10 h-10 text-slate-300 mx-auto mb-2" />
