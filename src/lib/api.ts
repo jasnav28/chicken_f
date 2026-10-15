@@ -2,7 +2,10 @@
  * PostgreSQL API Client for ChickenLink / RestoPilot
  */
 
-const envUrl = import.meta.env.VITE_API_URL?.trim();
+let envUrl = import.meta.env.VITE_API_URL?.trim();
+if (envUrl && !envUrl.startsWith('http://') && !envUrl.startsWith('https://')) {
+  envUrl = `https://${envUrl}`;
+}
 const API_BASE = envUrl
   ? envUrl.endsWith('/api')
     ? envUrl
